@@ -36,13 +36,15 @@
     scene.add(geometryTotal)
     function render () {
         //通知stats画面已被重新渲染了
-        stats.update();
+//        stats.update();
+        stats.begin()
         requestAnimationFrame(render)
 //        cube.rotation.y += 0.01
 //        cube.rotation.x -= 0.01
         geometryTotal.rotation.x += 0.01
         camera.position.x += 0.1
         renderer.render(scene, camera)
+        stats.end()
     }
     render()
     //初始化统计对象

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>无光</title>
+    <script src="three.min.js"></script>
+    <script src="./dat.gui.js"></script>
+    <style type="text/css">
+        body,html{
+            width: 100%;
+            height: 100%;
+        }
+        div#canvas-frame {
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            background-color: #EEEEEE;
+        }
+    </style>
+    <script>
+        // 渲染器
+        var renderer;
+        function initThree() {
+            width = document.getElementById('canvas-frame').clientWidth;
+            height = document.getElementById('canvas-frame').clientHeight;
+            renderer = new THREE.WebGLRenderer({
+                antialias : true // 抗锯齿属性，WebGLRenderer常用的一个属性
+            });
+            renderer.setSize(width, height);
+            document.getElementById('canvas-frame').appendChild(renderer.domElement);
+            renderer.setClearColor(0x000000, 1.0); // 渲染器的背景颜色
+        }
+        // 相机
+        var camera;
+        function initCamera() {
+            camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
+            // 摄像头的位置
+            camera.position.x = 0;
+            camera.position.y = 1000;
+            camera.position.z = 0;
+            // 摄像头的旋转角度
+            camera.up.x = 0;
+            camera.up.y = 0;
+            camera.up.z = 1;
+            // 摄像头往哪个方向看
+            camera.lookAt(0,0,0);
+        }
+        // 场景
+        var scene;
+        function initScene() {
+            scene = new THREE.Scene();
+        }
+        // 灯光
+        var light;
+        function initLight() {
+            var light = new THREE.DirectionalLight( 0xff0000,1 ); // 环境光和方向没关系的
+            light.position.set(0,1000,0)
+            scene.add( light );
+        }
+        // 几何体
+        var cube;
+        function initObject() {
+            var geometry = new THREE.BoxGeometry(100,100,100,2,2,2);
+            var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+            var mesh = new THREE.Mesh(geometry,material)
+            mesh.position = new THREE.Vector3(0,0,0)
+            scene.add(mesh);
+        }
+        // 初始化dat.gui插件
+        function initDatGui() {
+            gui = {
+                color : "#ffae23"
+            };
+            var datGui = new dat.GUI();
+            var color = datGui.addColor(gui, 'color');
+            //将设置属性添加到gui当中，gui.add(对象，属性，最小值，最大值）
+            color.onChange(function(value) {
+                console.log("onChange:" + value)
+                // 此处设置
+            });
+        }
+        // 初始化three.js
+        function threeStart() {
+            initThree();
+            initDatGui()
+            initCamera();
+            initScene();
+            initLight();
+            initObject();
+            render()
+        }
+        function render() {
+            renderer.render(scene, camera);
+            requestAnimationFrame(render)
+        }
+    </script>
+</head>
+
+<body onload="threeStart();">
+<div id="canvas-frame"></div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>方向光</title>
+    <script src="three.min.js"></script>
+    <style type="text/css">
+        body,html{
+            width: 100%;
+            height: 100%;
+        }
+        div#canvas-frame {
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            background-color: #EEEEEE;
+        }
+    </style>
+    <script>
+        // 渲染器
+        var renderer;
+        function initThree() {
+            width = document.getElementById('canvas-frame').clientWidth;
+            height = document.getElementById('canvas-frame').clientHeight;
+            renderer = new THREE.WebGLRenderer({
+                antialias : true // 抗锯齿属性，WebGLRenderer常用的一个属性
+            });
+            renderer.setSize(width, height);
+            document.getElementById('canvas-frame').appendChild(renderer.domElement);
+            renderer.setClearColor(0xffffff, 1.0); // 渲染器的背景颜色
+        }
+        // 相机
+        var camera;
+        function initCamera() {
+            camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
+            // 摄像头的位置
+            camera.position.x = 100;
+            camera.position.y = 100;
+            camera.position.z = 100;
+            // 摄像头的旋转角度
+            camera.up.x = 0;
+            camera.up.y = 1;
+            camera.up.z = 0;
+            // 摄像头往哪个方向看
+            camera.lookAt(0,0,0);
+        }
+        // 场景
+        var scene;
+        function initScene() {
+            scene = new THREE.Scene();
+        }
+        // 灯光
+        var light;
+        function initLight() {
+            // 方向光合方向有关系
+            var light = new THREE.DirectionalLight( 0xff0000,1 );
+            light.position.set(0,1,1)
+            scene.add( light );
+        }
+        // 几何体
+        var cube;
+        function initObject() {
+            var geometry = new THREE.BoxGeometry(20,20,20,2,2,2);
+            var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+            var mesh = new THREE.Mesh(geometry,material)
+            mesh.position = new THREE.Vector3(0,0,0)
+            scene.add(mesh);
+            // 绘制坐标系
+            var axisHelpter = new THREE.AxesHelper(500)
+            scene.add(axisHelpter)
+        }
+        // 初始化three.js
+        function threeStart() {
+            initThree();
+            initCamera();
+            initScene();
+            initLight();
+            initObject();
+            render()
+        }
+        function render() {
+            renderer.render(scene, camera);
+            requestAnimationFrame(render)
+        }
+    </script>
+</head>
+
+<body onload="threeStart();">
+<div id="canvas-frame"></div>
+</body>
+</html>
